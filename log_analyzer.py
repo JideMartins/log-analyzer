@@ -21,8 +21,14 @@ def get_level(line: str):
 
 # line parser
 def parse_line(line: str):
-    """Turn one log line into a structured record contyaining its level and message"""
-    
+    """Turn one log line into a structured record containing its level and message
+    Args:
+        line (str)
+    Returns:
+        dict: key=level, value=level message - if it has ERROR, INFO or WARNING along with its message
+        None: if arg has none of the levels or the levels without message
+    """
+
     # split line and strip it of trailing and ending spaces, newlines and tabs
     parsed_list = [item.strip() for item in line.split(maxsplit=1)]
 
