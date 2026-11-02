@@ -17,12 +17,11 @@ def get_level(line):
             return line_list[0]
     return None
 
+# line parser
+def parse_line(line):
+    """Turn one log line into a structured record contyaining its level and message
+    """
+    pass
 
 # tests
-print(get_level("INFO Application started"))
-print(get_level("WARNING Disk space low"))
-print(get_level("  ERROR Connection refused  "))
-print(get_level("\tINFO\tService ready\n"))
-print(get_level(""))
-print(get_level("   \t\n"))
-print(get_level("error Connection refused"))
+
