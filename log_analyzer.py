@@ -51,7 +51,7 @@ print(parse_line("INFO Previous ERROR resolved"))
 print(parse_line("INFO Service\tready"))
 
 
-# get_level tests
+# get_level regression tests
 print(get_level("INFO Application started"))
 print(get_level("WARNING Disk space low"))
 print(get_level("ERROR Database connection failed"))
