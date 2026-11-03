@@ -1,5 +1,17 @@
 LEVELS = ["ERROR", "WARNING", "INFO"]
 
+# define helper function for cleaning up lines
+def clean_up(line):
+    lines_list = [item.strip() for item in line.split(maxsplit=1)]
+    return lines_list
+
+# define helper function that creates a list of list for lines of logs
+def severity(lst):
+    new_list = []
+    for line in lst:
+        sev_list = clean_up(line)
+        new_list.append(sev_list)
+    return new_list 
 
 # create get_level function
 def get_level(line: str):
@@ -44,7 +56,23 @@ def parse_line(line: str):
 
 def analyze_lines(lines: list):
     """Return a dictionary showing an integer occurence frequency of each level"""
-    pass
+    # create initial dictionary
+    logs_list = severity(lines)
+
+    severity_set = set(LEVELS)
+
+    # set values to 0
+    result = {item:0 for item in severity_set}
+    result["malformed"] = 0
+
+    for sublist in lines:
+        if sublist and len(sublist) > 1:
+            if sublist[0] in result:
+                result[sublist[0]] += 1
+        else: result["malformed"] += 1
+
+    return result
+
 
 
 # tests
