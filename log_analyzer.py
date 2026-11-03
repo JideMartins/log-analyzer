@@ -1,9 +1,11 @@
 LEVELS = ["ERROR", "WARNING", "INFO"]
 
+
 # define helper function for cleaning up lines
 def clean_up(line):
     lines_list = [item.strip() for item in line.split(maxsplit=1)]
     return lines_list
+
 
 # define helper function that creates a list of list for lines of logs
 def severity(lst):
@@ -11,7 +13,8 @@ def severity(lst):
     for line in lst:
         sev_list = clean_up(line)
         new_list.append(sev_list)
-    return new_list 
+    return new_list
+
 
 # create get_level function
 def get_level(line: str):
@@ -62,17 +65,16 @@ def analyze_lines(lines: list):
     severity_set = set(LEVELS)
 
     # set values to 0
-    result = {item:0 for item in severity_set}
+    result = {item: 0 for item in severity_set}
     result["malformed"] = 0
 
     for sublist in logs_list:
-        if sublist and len(sublist) > 1:
-            if sublist[0] in result:
-                result[sublist[0]] += 1
-        else: result["malformed"] += 1
+        if sublist and len(sublist) > 1 and sublist[0] in result:
+            result[sublist[0]] += 1
+        else:
+            result["malformed"] += 1
 
     return result
-
 
 
 # tests
@@ -85,7 +87,11 @@ log1 = [
     "",
     "DEBUG Connection details",
 ]
-log2 = []
+
 
 print(analyze_lines(log1))
-print(analyze_lines(log2))
+print(analyze_lines(log1)) # Calling it twice to test for consistent results
+print(analyze_lines([]))
+print(analyze_lines(["ERROR Failed", "ERROR Failed"]))
+print(analyze_lines(["ERROR", "error Failed", "   \t", "DEBUG Details"]))
+print(analyze_lines(["INFO Previous ERROR resolved", "\tWARNING\tDisk  space low\n"]))
