@@ -1,5 +1,6 @@
 LEVELS = ["ERROR", "WARNING", "INFO"]
 
+
 # create get_level function
 def get_level(line: str):
     """Identifies the severity of log at the beginning of the line
@@ -43,15 +44,15 @@ def parse_line(line: str):
 
 def analyze_lines(lines: list):
     """Analyzes a list of raw log lines and counts occurrences of each severity level.
-    Iterates through raw log text entries, parses them, and accumulates the frequency 
-    of known severity levels. If a log line fails validation or cannot be parsed 
+    Iterates through raw log text entries, parses them, and accumulates the frequency
+    of known severity levels. If a log line fails validation or cannot be parsed
     successfully, it is tracked as a malformed entry.
 
     Args:
         lines (list): A list of raw string log lines to be parsed and analyzed.
 
     Returns:
-        dict: A mapping of severity levels (plus a 'malformed' counter) to their 
+        dict: A mapping of severity levels (plus a 'malformed' counter) to their
         respective integer frequency counts. Example:
         {'INFO': 15, 'ERROR': 2, 'malformed': 1}
     """
@@ -71,56 +72,3 @@ def analyze_lines(lines: list):
             result["malformed"] += 1
 
     return result
-
-
-# tests-1
-print("=====================Test stage 1=====================")
-print(get_level("INFO Application started"))
-print(get_level("WARNING Disk space low"))
-print(get_level("ERROR Database connection failed"))
-print(get_level("  ERROR Connection refused  "))
-print(get_level("\tINFO\tService ready\n"))
-print(get_level("ERROR"))
-print(get_level(""))
-print(get_level("   \t\n"))
-print(get_level("error Connection refused"))
-print(get_level("DEBUG Connection details"))
-print(get_level("INFO Previous ERROR resolved"))
-print(get_level("ERRORS occurred"))
-print()
-
-# tests-2
-print("=====================Test stage 2=====================")
-print(parse_line("INFO Application started"))
-print(parse_line("  ERROR Connection refused  "))
-print(parse_line("WARNING Disk  space low"))
-print(parse_line("\tINFO\tService ready\n"))
-print(parse_line("ERROR"))
-print(parse_line("ERROR   \t"))
-print(parse_line(""))
-print(parse_line("   \t\n"))
-print(parse_line("error Connection refused"))
-print(parse_line("ERRORS occurred"))
-print(parse_line("INFO Previous ERROR resolved"))
-print(parse_line("INFO Service\tready"))
-print()
-
-# tests 3
-print("=====================Test stage 3=====================")
-log1 = [
-    "INFO Application started",
-    "ERROR Database connection failed",
-    "WARNING Disk space low",
-    "INFO Application stopped",
-    "ERROR",
-    "",
-    "DEBUG Connection details",
-]
-
-
-print(analyze_lines(log1))
-print(analyze_lines(log1))  # Calling it twice to test for consistent results
-print(analyze_lines([]))
-print(analyze_lines(["ERROR Failed", "ERROR Failed"]))
-print(analyze_lines(["ERROR", "error Failed", "   \t", "DEBUG Details"]))
-print(analyze_lines(["INFO Previous ERROR resolved", "\tWARNING\tDisk  space low\n"]))
