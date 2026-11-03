@@ -42,4 +42,9 @@ def parse_line(line: str):
     return None
 
 
+def analyze_lines(lines: list):
+    """Return a dictionary showing an integer occurence frequency of each level"""
+    pass
+
+
 # tests
