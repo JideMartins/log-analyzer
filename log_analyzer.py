@@ -42,7 +42,19 @@ def parse_line(line: str):
 
 
 def analyze_lines(lines: list):
-    """Return a dictionary showing an integer occurence frequency of each level"""
+    """Analyzes a list of raw log lines and counts occurrences of each severity level.
+    Iterates through raw log text entries, parses them, and accumulates the frequency 
+    of known severity levels. If a log line fails validation or cannot be parsed 
+    successfully, it is tracked as a malformed entry.
+
+    Args:
+        lines (list): A list of raw string log lines to be parsed and analyzed.
+
+    Returns:
+        dict: A mapping of severity levels (plus a 'malformed' counter) to their 
+        respective integer frequency counts. Example:
+        {'INFO': 15, 'ERROR': 2, 'malformed': 1}
+    """
     # create initial dictionary
     severity_set = set(LEVELS)
     result = {item: 0 for item in severity_set}
@@ -51,9 +63,9 @@ def analyze_lines(lines: list):
     for line in lines:
         line_dict = parse_line(line)
 
-        # Using this condition as other conditions won't allow the .keys() usage
+        # Check guard
         if line_dict is not None:
-            level = list(line_dict.values())[0]  # get first element of the list
+            level = line_dict["level"]  # get level of log line
             result[level] += 1
         else:
             result["malformed"] += 1
