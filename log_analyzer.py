@@ -30,13 +30,14 @@ def parse_line(line: str):
 
     # split line and strip it of trailing and ending spaces, newlines and tabs
     parsed_list = [item.strip() for item in line.split(maxsplit=1)]
-    result = {}
 
     # check for non-empty lists and lists with message
     if parsed_list and len(parsed_list) > 1:
         if parsed_list[0] in LEVELS:
-            result[parsed_list[0]] = parsed_list[1]
-            return result
+            return dict(
+                level=parsed_list[0],
+                message=parsed_list[1],
+            )
     return None
 
 
@@ -52,7 +53,7 @@ def analyze_lines(lines: list):
 
         # Using this condition as other conditions won't allow the .keys() usage
         if line_dict is not None:
-            level = list(line_dict.keys())[0]  # get first element of the list
+            level = list(line_dict.values())[0]  # get first element of the list
             result[level] += 1
         else:
             result["malformed"] += 1
