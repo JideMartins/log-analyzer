@@ -65,7 +65,7 @@ def analyze_lines(lines: list):
     result = {item:0 for item in severity_set}
     result["malformed"] = 0
 
-    for sublist in lines:
+    for sublist in logs_list:
         if sublist and len(sublist) > 1:
             if sublist[0] in result:
                 result[sublist[0]] += 1
@@ -76,3 +76,16 @@ def analyze_lines(lines: list):
 
 
 # tests
+log1 = [
+    "INFO Application started",
+    "ERROR Database connection failed",
+    "WARNING Disk space low",
+    "INFO Application stopped",
+    "ERROR",
+    "",
+    "DEBUG Connection details",
+]
+log2 = []
+
+print(analyze_lines(log1))
+print(analyze_lines(log2))
