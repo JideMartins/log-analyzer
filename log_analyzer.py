@@ -86,4 +86,3 @@ def analyze_file(path: str):
 
     # use lines
     return analyze_lines(log_lines_list)
-
