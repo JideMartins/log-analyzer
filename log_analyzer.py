@@ -80,10 +80,8 @@ def analyze_file(path: str) -> dict:
     """Analyze logs saved locally.
     Args:
         path (str): The local file path to the log file.
-
     Returns:
         dict: A breakdown of the analyzed log data.
-
     Raises:
         FileNotFoundError: If the log file does not exist at the specified path.
     """
