@@ -104,10 +104,27 @@ analyzer = ArgumentParser(description="Analyzes log files")
 # Add path argument
 analyzer.add_argument("path", type=str, help="File path")
 
+
 # The main event
 def main():
     """Parses command-line arguments and prints log analysis results.
+
+    Raises:
+        FileNotFoundError: Handled internally; prints a "No such file or directory"
+        message to `sys.stderr` and exits with code 1.
+        PermissionError: Handled internally; prints an access restriction
+        warning to `sys.stderr` and exits with code 1.
+        IsADirectoryError: Handled internally; prints an invalid target type
+        warning to `sys.stderr` and exits with code 1.
+        OSError: Handled internally; catches unclassified systemic file errors,
+        prints the raw OS message to `sys.stderr`, and exits with code 1.
+
+    Exit Codes:
+        0: Application executed and processed the target file successfully.
+        1: Operational file-access constraint encountered (missing, locked, or directory).
+        2: Invalid CLI arguments provided (managed implicitly by argparse).
     """
+
     # parse argument(s)
     args: Namespace = analyzer.parse_args()
     try:
