@@ -1,4 +1,4 @@
-LEVELS = ["ERROR", "WARNING", "INFO"]
+LEVELS = ["INFO", "WARNING", "ERROR"]
 
 
 # create get_level function
@@ -72,3 +72,13 @@ def analyze_lines(lines: list):
             result["malformed"] += 1
 
     return result
+
+
+# Read local file
+with open("./sample.log", "r", encoding="utf-8") as log:
+    log_lines_list = log.readlines()
+
+# file closed
+
+# use lines
+print(analyze_lines(log_lines_list))
