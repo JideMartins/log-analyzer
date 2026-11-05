@@ -1,4 +1,5 @@
 from argparse import ArgumentParser, Namespace
+import sys
 
 LEVELS = ["INFO", "WARNING", "ERROR"]
 
@@ -114,14 +115,20 @@ def main():
     except FileNotFoundError:
         # handle missing files
         print(f"Error: cannot read '{args.path}': No such file or directory")
+        sys.exit(1)
+
     except PermissionError:
         # handle file access without required permissions
         print(
             f"Error: Permission denied when accessing'{args.path}': Check permissions"
         )
+        sys.exit(1)
+
     except IsADirectoryError:
         # handles directories
         print(f"Error: file path: '{args.path}' is a directory and not a file")
+        sys.exit(1)
+
     except OSError as e:
         # Catch other system and OS-level file issues
         print(f"Error: '{args.path}': An unexpected OS error occcured: {e}")
