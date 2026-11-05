@@ -5,13 +5,12 @@ from manual_checks import analyze_file
 analyzer = ArgumentParser(description="Analyzes log files")
 
 # Add path argument
-analyzer.add_argument("path", type=str, help="File path", default="")
-
-# parse argument(s)
-args: Namespace = analyzer.parse_args()
+analyzer.add_argument("path", type=str, help="File path")
 
 
 def main():
+    # parse argument(s)
+    args: Namespace = analyzer.parse_args()
     if args.path:
         for level, count in analyze_file(args.path).items():
             print(f"{level}: {count}")

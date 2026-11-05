@@ -57,8 +57,8 @@ def analyze_lines(lines: list):
         {'INFO': 15, 'ERROR': 2, 'malformed': 1}
     """
     # create initial dictionary
-    severity_set = set(LEVELS)
-    result = {item: 0 for item in severity_set}
+    # severity_set = set(LEVELS) # set creates inconsistent format
+    result = {item: 0 for item in LEVELS}
     result["malformed"] = 0
 
     for line in lines:
