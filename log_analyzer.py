@@ -103,8 +103,10 @@ analyzer = ArgumentParser(description="Analyzes log files")
 # Add path argument
 analyzer.add_argument("path", type=str, help="File path")
 
-
+# The main event
 def main():
+    """Parses command-line arguments and prints log analysis results.
+    """
     # parse argument(s)
     args: Namespace = analyzer.parse_args()
     if args.path:
