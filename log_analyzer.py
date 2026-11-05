@@ -114,24 +114,35 @@ def main():
                 print(f"{level}: {count}")
     except FileNotFoundError:
         # handle missing files
-        print(f"Error: cannot read '{args.path}': No such file or directory")
+        print(
+            f"Error: cannot read '{args.path}': No such file or directory",
+            file=sys.stderr,
+        )
         sys.exit(1)
 
     except PermissionError:
         # handle file access without required permissions
         print(
-            f"Error: Permission denied when accessing'{args.path}': Check permissions"
+            f"Error: Permission denied when accessing'{args.path}': Check permissions",
+            file=sys.stderr,
         )
         sys.exit(1)
 
     except IsADirectoryError:
         # handles directories
-        print(f"Error: file path: '{args.path}' is a directory and not a file")
+        print(
+            f"Error: file path: '{args.path}' is a directory and not a file",
+            file=sys.stderr,
+        )
         sys.exit(1)
 
     except OSError as e:
         # Catch other system and OS-level file issues
-        print(f"Error: '{args.path}': An unexpected OS error occcured: {e}")
+        print(
+            f"Error: '{args.path}': An unexpected OS error occcured: {e}",
+            file=sys.stderr,
+        )
+        sys.exit(1)
 
 
 if __name__ == "__main__":
