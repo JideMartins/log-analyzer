@@ -107,9 +107,24 @@ analyzer.add_argument("path", type=str, help="File path")
 def main():
     # parse argument(s)
     args: Namespace = analyzer.parse_args()
-    if args.path:
-        for level, count in analyze_file(args.path).items():
-            print(f"{level}: {count}")
+    try:
+        if args.path:
+            for level, count in analyze_file(args.path).items():
+                print(f"{level}: {count}")
+    except FileNotFoundError:
+        # handle missing files
+        print(f"Error: cannot read '{args.path}': No such file or directory")
+    except PermissionError:
+        # handle file access without required permissions
+        print(
+            f"Error: Permission denied when accessing'{args.path}': Check permissions"
+        )
+    except IsADirectoryError:
+        # handles directories
+        print(f"Error: file path: '{args.path}' is a directory and not a file")
+    except OSError as e:
+        # Catch other system and OS-level file issues
+        print(f"Error: '{args.path}': An unexpected OS error occcured: {e}")
 
 
 if __name__ == "__main__":
