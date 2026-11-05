@@ -2,7 +2,7 @@ LEVELS = ["INFO", "WARNING", "ERROR"]
 
 
 # create get_level function
-def get_level(line: str):
+def get_level(line: str) -> str | None:
     """Identifies the severity of log at the beginning of the line
     Args:
         line (str): _description_
@@ -20,7 +20,7 @@ def get_level(line: str):
 
 
 # line parser
-def parse_line(line: str):
+def parse_line(line: str) -> dict | None:
     """Turn one log line into a structured record containing its level and message
     Args:
         line (str)
@@ -42,7 +42,7 @@ def parse_line(line: str):
     return None
 
 
-def analyze_lines(lines: list):
+def analyze_lines(lines: list) -> dict:
     """Analyzes a list of raw log lines and counts occurrences of each severity level.
     Iterates through raw log text entries, parses them, and accumulates the frequency
     of known severity levels. If a log line fails validation or cannot be parsed
@@ -74,8 +74,17 @@ def analyze_lines(lines: list):
     return result
 
 
-def analyze_file(path: str):
-    "Analyze logs saved locally"
+def analyze_file(path: str) -> dict:
+    """Analyze logs saved locally.
+    Args:
+        path (str): The local file path to the log file.
+
+    Returns:
+        dict: A breakdown of the analyzed log data.
+
+    Raises:
+        FileNotFoundError: If the log file does not exist at the specified path.
+    """
     try:
         # Read local file
         with open(path, "r", encoding="utf-8") as log:
