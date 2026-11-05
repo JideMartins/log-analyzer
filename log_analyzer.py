@@ -1,3 +1,5 @@
+from argparse import ArgumentParser, Namespace
+
 LEVELS = ["INFO", "WARNING", "ERROR"]
 
 
@@ -57,8 +59,8 @@ def analyze_lines(lines: list) -> dict:
         {'INFO': 15, 'ERROR': 2, 'malformed': 1}
     """
     # create initial dictionary
-    severity_set = set(LEVELS)
-    result = {item: 0 for item in severity_set}
+    # severity_set = set(LEVELS) # set creates inconsistent format
+    result = {item: 0 for item in LEVELS}
     result["malformed"] = 0
 
     for line in lines:
@@ -95,3 +97,22 @@ def analyze_file(path: str) -> dict:
 
     # use lines
     return analyze_lines(log_lines_list)
+
+
+# Create parser object
+analyzer = ArgumentParser(description="Analyzes log files")
+
+# Add path argument
+analyzer.add_argument("path", type=str, help="File path")
+
+
+def main():
+    # parse argument(s)
+    args: Namespace = analyzer.parse_args()
+    if args.path:
+        for level, count in analyze_file(args.path).items():
+            print(f"{level}: {count}")
+
+
+if __name__ == "__main__":
+    main()
