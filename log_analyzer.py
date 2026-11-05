@@ -105,6 +105,7 @@ analyzer = ArgumentParser(description="Analyzes log files")
 analyzer.add_argument("path", type=str, help="File path")
 
 
+# TODO Add check for Windows files
 # The main event
 def main():
     """Parses command-line arguments and prints log analysis results.
