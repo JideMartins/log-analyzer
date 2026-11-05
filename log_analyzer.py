@@ -73,12 +73,16 @@ def analyze_lines(lines: list):
 
     return result
 
+# TODO: Wrap analyzer in function
 
-# Read local file
-with open("./sample.log", "r", encoding="utf-8") as log:
-    log_lines_list = log.readlines()
+def analyze_file(path: str):
+    "Analyze logs saved locally"
+    # Read local file
+    with open(path, "r", encoding="utf-8") as log:
+        log_lines_list = log.readlines()
+    # file closed
 
-# file closed
+    # use lines
+    return analyze_lines(log_lines_list)
 
-# use lines
-print(analyze_lines(log_lines_list))
+print(analyze_file("sample.log"))
