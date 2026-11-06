@@ -98,7 +98,7 @@ def analyze_file(path: str) -> dict:
     return analyze_lines(log_lines_list)
 
 
-def filter_lines(lines: list, level: str) -> str | None:
+def filter_lines(lines: list, level: str) -> list:
     """Accept a list of raw log strings and one valid level string
     Returns a list of matching dictionaries in the existing format
 
@@ -106,12 +106,13 @@ def filter_lines(lines: list, level: str) -> str | None:
         lines (list)
         level (str)
     """
+    filter_list = []
     for line in lines:
         parsed_line = parse_line(line)
 
-        if parsed_line is not None and level in LEVELS:
-            print(f"{level} {parsed_line["message"]}")
-    return None
+        if parsed_line is not None and parsed_line["level"] == level:
+            filter_list.append(parsed_line)
+    return filter_list
 
 
 # Create parser object
