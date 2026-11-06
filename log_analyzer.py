@@ -1,5 +1,5 @@
-from argparse import ArgumentParser, Namespace
 import sys
+from argparse import ArgumentParser, Namespace
 
 LEVELS = ["INFO", "WARNING", "ERROR"]
 
@@ -101,7 +101,7 @@ def analyze_file(path: str) -> dict:
 # Create parser object
 analyzer = ArgumentParser(description="Analyzes log files")
 
-# Add path argument
+# Add path arguments
 analyzer.add_argument("path", type=str, help="File path")
 
 
