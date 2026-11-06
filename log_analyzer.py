@@ -154,7 +154,9 @@ def main():
         elif args.level:
             with open(args.path, "r", encoding="utf-8") as log:
                 log_lines = log.readlines()
-            filter_lines(log_lines, args.level)
+            filter_list = filter_lines(log_lines, args.level)
+            for item in filter_list:
+                print(item.keys(), item.values())
 
     except FileNotFoundError:
         # handle missing files
