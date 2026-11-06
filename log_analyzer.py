@@ -119,10 +119,20 @@ def filter_lines(lines: list, level: str) -> list:
 analyzer = ArgumentParser(description="Analyzes log files")
 
 # Add path arguments
-analyzer.add_argument("path", type=str, help="File path")
+analyzer.add_argument(
+    "path",
+    type=str,
+    help="File path",
+)
 
 # add levels flag
-analyzer.add_argument("--level", help="filters log level", type=str)
+analyzer.add_argument(
+    "-l",
+    "--level",
+    help="filters log level",
+    type=str,
+    choices=LEVELS,
+)
 
 
 # TODO Add check for Windows files
@@ -149,15 +159,18 @@ def main():
     # parse argument(s)
     args: Namespace = analyzer.parse_args()
     try:
-        if args.path:
-            for level, count in analyze_file(args.path).items():
-                print(f"{level}: {count}")
-        elif args.level:
+        if args.level:
             with open(args.path, "r", encoding="utf-8") as log:
                 log_lines = log.readlines()
             filter_list = filter_lines(log_lines, args.level)
+            # Print for levels
             for item in filter_list:
-                print(item.keys(), item.values())
+                print(item["level"], item["message"])
+        
+        # default behaviour (ie if args.path)
+        else:
+            for level, count in analyze_file(args.path).items():
+                print(f"{level}: {count}")
 
     except FileNotFoundError:
         # handle missing files
