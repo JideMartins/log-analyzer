@@ -98,11 +98,31 @@ def analyze_file(path: str) -> dict:
     return analyze_lines(log_lines_list)
 
 
+def filter_lines(lines: list, level: str) -> list:
+    """Accept a list of raw log strings and one valid level string
+    Returns a list of matching dictionaries in the existing format
+
+    Args:
+        lines (list)
+        level (str)
+    """
+    filter_list = []
+    for line in lines:
+        parsed_line = parse_line(line)
+
+        if parsed_line is not None and parsed_line["level"] == level:
+            filter_list.append(parsed_line)
+    return filter_list
+
+
 # Create parser object
 analyzer = ArgumentParser(description="Analyzes log files")
 
 # Add path arguments
 analyzer.add_argument("path", type=str, help="File path")
+
+# add levels flag
+analyzer.add_argument("--level", help="filters log level", type=str)
 
 
 # TODO Add check for Windows files
@@ -132,6 +152,13 @@ def main():
         if args.path:
             for level, count in analyze_file(args.path).items():
                 print(f"{level}: {count}")
+        elif args.level:
+            with open(args.path, "r", encoding="utf-8") as log:
+                log_lines = log.readlines()
+            filter_list = filter_lines(log_lines, args.level)
+            for item in filter_list:
+                print(item.keys(), item.values())
+
     except FileNotFoundError:
         # handle missing files
         print(

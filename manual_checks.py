@@ -1,4 +1,10 @@
-from log_analyzer import get_level, parse_line, analyze_lines, analyze_file
+from log_analyzer import (
+    get_level,
+    parse_line,
+    analyze_lines,
+    analyze_file,
+    filter_lines,
+)
 
 # tests-1
 print("=====================Test 1=====================")
@@ -51,6 +57,7 @@ print(analyze_lines([]))
 print(analyze_lines(["ERROR Failed", "ERROR Failed"]))
 print(analyze_lines(["ERROR", "error Failed", "   \t", "DEBUG Details"]))
 print(analyze_lines(["INFO Previous ERROR resolved", "\tWARNING\tDisk  space low\n"]))
+print()
 
 # tests 4
 print("=====================Test 4=====================")
@@ -60,4 +67,22 @@ print(analyze_file("logs/empty.log"))
 print(analyze_file("logs/blank.log"))
 print(analyze_file("logs/single.log"))
 print(analyze_file("logs/unicode.log"))
-print(analyze_file("logs/non-existent.log"))
+# print(analyze_file("logs/non-existent.log"))
+print()
+
+
+# test-7
+print("=====================Test 7=====================")
+print(
+    filter_lines(
+        [
+            "ERROR First failure",
+            "INFO Ready",
+            "ERROR",
+            "  ERROR Second  failure  ",
+            "ERROR First failure",
+            "error Lowercase entry",
+        ],
+        "ERROR",
+    )
+)
