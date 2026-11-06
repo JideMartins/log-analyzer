@@ -118,14 +118,16 @@ def filter_lines(lines: list, level: str) -> list:
 # Create parser object
 analyzer = ArgumentParser(description="Analyzes log files")
 
-# Add path arguments
+
+# Add arguments
+# 1. path argument
 analyzer.add_argument(
     "path",
     type=str,
     help="File path",
 )
 
-# add levels flag
+# 2. levels flag
 analyzer.add_argument(
     "-l",
     "--level",
@@ -166,7 +168,7 @@ def main():
             # Print for levels
             for item in filter_list:
                 print(item["level"], item["message"])
-        
+
         # default behaviour (ie if args.path)
         else:
             for level, count in analyze_file(args.path).items():
