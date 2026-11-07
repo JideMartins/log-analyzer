@@ -24,7 +24,7 @@ class TestLogAnalyzer(TestCase):
         self.target_file_path = self.tmp_dir / "temp_log.log"
 
         # clean up after
-        self.addClassCleanup(self.tmp_directory_object.cleanup)
+        self.addCleanup(self.tmp_directory_object.cleanup)
 
     # test get_level()
     def test_get_level_works(self):
@@ -39,7 +39,7 @@ class TestLogAnalyzer(TestCase):
         self.assertIsInstance(parse_line("  WARNING Disk  space low  "), dict)
 
         self.assertEqual(
-            parse_line("WARNING Disk  space low"),
+            parse_line("  WARNING Disk  space low  "),
             {"level": "WARNING", "message": "Disk  space low"},
         )
 
