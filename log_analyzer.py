@@ -77,7 +77,7 @@ def analyze_lines(lines: list) -> dict:
     return result
 
 
-def analyze_file(path: str) -> dict:
+def analyze_file(path) -> dict:
     """Analyze logs saved locally.
     Args:
         path (str): The local file path to the log file.

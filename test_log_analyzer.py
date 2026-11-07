@@ -1,4 +1,6 @@
 from unittest import TestCase
+from tempfile import TemporaryDirectory
+from pathlib import Path
 from log_analyzer import (
     get_level,
     parse_line,
@@ -9,6 +11,20 @@ from log_analyzer import (
 
 
 class TestLogAnalyzer(TestCase):
+
+    # set up
+    def setUp(self):
+        # temporary
+        self.tmp_directory_object = TemporaryDirectory()
+
+        # temporary directory
+        self.tmp_dir = Path(self.tmp_directory_object.name)
+
+        # target file path
+        self.target_file_path = self.tmp_dir / "temp_log.log"
+
+        # clean up after
+        self.addClassCleanup(self.tmp_directory_object.cleanup)
 
     # test get_level()
     def test_get_level_works(self):
@@ -29,3 +45,29 @@ class TestLogAnalyzer(TestCase):
 
     def test_parse_line_none(self):
         self.assertIsNone(parse_line("ERROR"))
+
+    def test_analyze_files_mixed_entries(self):
+        self.target_file_path.write_text("INFO Café ready\nERROR Failed\n\nWARNING")
+        self.assertEqual(
+            analyze_file(self.target_file_path),
+            {"INFO": 1, "WARNING": 0, "ERROR": 1, "malformed": 2},
+        )
+
+    def test_analyze_files_empty_file(self):
+        self.target_file_path.write_text("")
+        self.assertEqual(
+            analyze_file(self.target_file_path),
+            {"INFO": 0, "WARNING": 0, "ERROR": 0, "malformed": 0},
+        )
+
+    def test_analyze_files_one_blank_line(self):
+        self.target_file_path.write_text("\n")
+        self.assertEqual(
+            analyze_file(self.target_file_path),
+            {"INFO": 0, "WARNING": 0, "ERROR": 0, "malformed": 1},
+        )
+
+    def test_analyze_files_missing_file(self):
+
+        with self.assertRaises(FileNotFoundError):
+            analyze_file(self.target_file_path)
