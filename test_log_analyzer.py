@@ -47,21 +47,23 @@ class TestLogAnalyzer(TestCase):
         self.assertIsNone(parse_line("ERROR"))
 
     def test_analyze_files_mixed_entries(self):
-        self.target_file_path.write_text("INFO Café ready\nERROR Failed\n\nWARNING")
+        self.target_file_path.write_text(
+            "INFO Café ready\nERROR Failed\n\nWARNING", encoding="utf-8"
+        )
         self.assertEqual(
             analyze_file(self.target_file_path),
             {"INFO": 1, "WARNING": 0, "ERROR": 1, "malformed": 2},
         )
 
     def test_analyze_files_empty_file(self):
-        self.target_file_path.write_text("")
+        self.target_file_path.write_text("", encoding="utf-8")
         self.assertEqual(
             analyze_file(self.target_file_path),
             {"INFO": 0, "WARNING": 0, "ERROR": 0, "malformed": 0},
         )
 
     def test_analyze_files_one_blank_line(self):
-        self.target_file_path.write_text("\n")
+        self.target_file_path.write_text("\n", encoding="utf-8")
         self.assertEqual(
             analyze_file(self.target_file_path),
             {"INFO": 0, "WARNING": 0, "ERROR": 0, "malformed": 1},
