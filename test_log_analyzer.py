@@ -91,9 +91,35 @@ class TestLogAnalyzer(TestCase):
             timeout=5,
         )
 
-        self.assertEqual(result.stdout, "INFO: 1\nWARNING: 0\nERROR: 2\nmalformed: 1\n")
+        self.assertEqual(
+            result.stdout,
+            "INFO: 1\nWARNING: 0\nERROR: 2\nmalformed: 1\n",
+        )
         self.assertEqual(result.stderr, "")
         self.assertEqual(result.returncode, 0)
+
+    def test_cli_filter_errors(self):
+
+        self.target_file_path.write_text(self.file_log)
+        result: subprocess.CompletedProcess = subprocess.run(
+            [
+                sys.executable,
+                str(self.analyzer_path),
+                "--level",
+                "ERROR",
+                str(self.target_file_path),
+            ],
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+
+        self.assertEqual(result.returncode, 0)
+        self.assertEqual(result.stderr, "")
+        self.assertEqual(
+            result.stdout,
+            "ERROR First  failure\nERROR First  failure\n",
+        )
 
     def test_cli_help(self):
         result: subprocess.CompletedProcess = subprocess.run(
@@ -106,4 +132,4 @@ class TestLogAnalyzer(TestCase):
         self.assertEqual(result.returncode, 0)
         self.assertIn("path", result.stdout)
         self.assertIn("--level", result.stdout)
-        self.assertIn(result.stderr, "")
+        self.assertEqual(result.stderr, "")
