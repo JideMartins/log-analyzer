@@ -26,3 +26,17 @@ ERROR: 2
 malformed: 1
 ```
 The summary always includes all three levels, even when a level has zero entries. The bare `ERROR` line counts as malformed because it has no message.
+
+### Filter by severity
+```bash
+python3 log_analyzer.py sample.log --level ERROR
+```
+
+```text
+ERROR Database connection failed
+ERROR Request timed out
+```
+
+Use `-l` as a shorthand for `--level`. Filtering skips malformed lines and prints matches in file order, including duplicates. A filter with zero matches produces empty output and exits successfully.
+
+## Input Format
