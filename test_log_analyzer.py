@@ -24,7 +24,8 @@ class TestLogAnalyzer(TestCase):
         self.tmp_dir = Path(self.tmp_directory_object.name)
 
         # target file paths
-        self.target_file_path = self.tmp_dir / "temp_log.log"
+        self.target_file_path = self.tmp_dir / "sample copy.log"
+        # self.cli_test_path = self.tmp_dir / "sample copy.log"
 
         # point to log analyzer
         self.analyzer_path = Path(__file__).parent / "log_analyzer.py"
@@ -82,10 +83,14 @@ class TestLogAnalyzer(TestCase):
 
     # Automate cli checks
     def test_cli_summary(self):
-        self.target_file_path.write_text(self.file_log)
+        self.target_file_path.write_text(self.file_log, encoding="utf-8")
 
         result: subprocess.CompletedProcess = subprocess.run(
-            [sys.executable, str(self.analyzer_path), str(self.target_file_path)],
+            [
+                sys.executable,
+                str(self.analyzer_path),
+                str(self.target_file_path),
+            ],
             capture_output=True,
             text=True,
             timeout=5,
@@ -100,7 +105,7 @@ class TestLogAnalyzer(TestCase):
 
     def test_cli_filter_errors(self):
 
-        self.target_file_path.write_text(self.file_log)
+        self.target_file_path.write_text(self.file_log, encoding="utf-8")
         result: subprocess.CompletedProcess = subprocess.run(
             [
                 sys.executable,
@@ -122,7 +127,7 @@ class TestLogAnalyzer(TestCase):
         )
 
     def test_cli_no_matches(self):
-        self.target_file_path.write_text(self.file_log)
+        self.target_file_path.write_text(self.file_log, encoding="utf-8")
         result: subprocess.CompletedProcess = subprocess.run(
             [
                 sys.executable,
@@ -144,6 +149,8 @@ class TestLogAnalyzer(TestCase):
             [
                 sys.executable,
                 str(self.analyzer_path),
+                "--level",
+                "ERROR",
                 str(self.target_file_path),
             ],
             capture_output=True,
@@ -153,11 +160,14 @@ class TestLogAnalyzer(TestCase):
 
         self.assertEqual(result.returncode, 1)
         self.assertIn("Error:", result.stderr)
+        self.assertIn(f"{self.target_file_path}", result.stderr)
         self.assertIn("No such file or directory", result.stderr)
         self.assertNotIn("Traceback", result.stderr)
         self.assertEqual(result.stdout, "")
 
     def test_cli_invalid_level(self):
+        self.target_file_path.write_text(self.file_log, encoding="utf-8")
+
         result: subprocess.CompletedProcess = subprocess.run(
             [
                 sys.executable,
@@ -173,6 +183,8 @@ class TestLogAnalyzer(TestCase):
 
         self.assertEqual(result.returncode, 2)
         self.assertIn("invalid choice", result.stderr)
+        self.assertIn("--level", result.stderr)
+        self.assertIn("DEBUG", result.stderr)
         self.assertEqual(result.stdout, "")
 
     def test_cli_help(self):
