@@ -121,6 +121,24 @@ class TestLogAnalyzer(TestCase):
             "ERROR First  failure\nERROR First  failure\n",
         )
 
+    def test_cli_no_matches(self):
+        self.target_file_path.write_text(self.file_log)
+        result: subprocess.CompletedProcess = subprocess.run(
+            [
+                sys.executable,
+                str(self.analyzer_path),
+                "--level",
+                "WARNING",
+                str(self.target_file_path),
+            ],
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+        self.assertEqual(result.returncode, 0)
+        self.assertEqual(result.stderr, "")
+        self.assertEqual(result.stdout, "")
+
     def test_cli_help(self):
         result: subprocess.CompletedProcess = subprocess.run(
             [sys.executable, str(self.analyzer_path), "--help"],
