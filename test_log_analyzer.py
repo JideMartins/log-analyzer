@@ -139,6 +139,21 @@ class TestLogAnalyzer(TestCase):
         self.assertEqual(result.stderr, "")
         self.assertEqual(result.stdout, "")
 
+    def test_cli_missing_file(self):
+        result: subprocess.CompletedProcess = subprocess.run(
+            [
+                sys.executable,
+                str(self.analyzer_path),
+            ],
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+
+        self.assertEqual(result.returncode, 1)
+        self.assertEqual(result.stderr, "")
+        self.assertEqual(result.stdout, "")
+
     def test_cli_help(self):
         result: subprocess.CompletedProcess = subprocess.run(
             [sys.executable, str(self.analyzer_path), "--help"],
