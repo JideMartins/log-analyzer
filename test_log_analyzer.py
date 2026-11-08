@@ -94,3 +94,16 @@ class TestLogAnalyzer(TestCase):
         self.assertEqual(result.stdout, "INFO: 1\nWARNING: 0\nERROR: 2\nmalformed: 1\n")
         self.assertEqual(result.stderr, "")
         self.assertEqual(result.returncode, 0)
+
+    def test_cli_help(self):
+        result: subprocess.CompletedProcess = subprocess.run(
+            [sys.executable, str(self.analyzer_path), "--help"],
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+
+        self.assertEqual(result.returncode, 0)
+        self.assertIn("path", result.stdout)
+        self.assertIn("--level", result.stdout)
+        self.assertIn(result.stderr, "")
