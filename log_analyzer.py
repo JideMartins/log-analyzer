@@ -1,5 +1,6 @@
 import sys
 from argparse import ArgumentParser, Namespace
+from pathlib import Path
 
 LEVELS = ["INFO", "WARNING", "ERROR"]
 
@@ -115,6 +116,8 @@ def filter_lines(lines: list, level: str) -> list:
     return filter_list
 
 
+# =========================================================================
+
 # Create parser object
 analyzer = ArgumentParser(description="Analyzes log files")
 
@@ -123,15 +126,15 @@ analyzer = ArgumentParser(description="Analyzes log files")
 # 1. path argument
 analyzer.add_argument(
     "path",
-    type=str,
-    help="File path",
+    type=Path,
+    help="Path to the log file",
 )
 
 # 2. levels flag
 analyzer.add_argument(
     "-l",
     "--level",
-    help="filters log level",
+    help="filter level",
     type=str,
     choices=LEVELS,
 )
@@ -160,6 +163,15 @@ def main():
 
     # parse argument(s)
     args: Namespace = analyzer.parse_args()
+
+    # Windows Guard: Catch directories immediately before they trigger a PermissionError
+    if args.path.is_dir():
+        print(
+            f"Error: file path: '{args.path}' is a directory and not a file",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
     try:
         if args.level:
             with open(args.path, "r", encoding="utf-8") as log:
@@ -192,6 +204,7 @@ def main():
 
     except IsADirectoryError:
         # handles directories
+        # Specific to Unix/Linux - for Windows, see initial Guard before the try block
         print(
             f"Error: file path: '{args.path}' is a directory and not a file",
             file=sys.stderr,
