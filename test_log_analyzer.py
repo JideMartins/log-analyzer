@@ -1,3 +1,5 @@
+import subprocess
+import sys
 from unittest import TestCase
 from tempfile import TemporaryDirectory
 from pathlib import Path
@@ -14,14 +16,18 @@ class TestLogAnalyzer(TestCase):
 
     # set up
     def setUp(self):
+        self.file_log = "INFO Ready\nERROR First  failure\nERROR\nERROR First  failure"
         # temporary
         self.tmp_directory_object = TemporaryDirectory()
 
         # temporary directory
         self.tmp_dir = Path(self.tmp_directory_object.name)
 
-        # target file path
+        # target file paths
         self.target_file_path = self.tmp_dir / "temp_log.log"
+
+        # point to log analyzer
+        self.analyzer_path = Path(__file__).parent / "log_analyzer.py"
 
         # clean up after
         self.addCleanup(self.tmp_directory_object.cleanup)
@@ -73,3 +79,18 @@ class TestLogAnalyzer(TestCase):
 
         with self.assertRaises(FileNotFoundError):
             analyze_file(self.target_file_path)
+
+    # Automate cli checks
+    def test_cli_summary(self):
+        self.target_file_path.write_text(self.file_log)
+
+        result: subprocess.CompletedProcess = subprocess.run(
+            [sys.executable, str(self.analyzer_path), str(self.target_file_path)],
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+
+        self.assertEqual(result.stdout, "INFO: 1\nWARNING: 0\nERROR: 2\nmalformed: 1\n")
+        self.assertEqual(result.stderr, "")
+        self.assertEqual(result.returncode, 0)
