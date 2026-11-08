@@ -155,6 +155,25 @@ class TestLogAnalyzer(TestCase):
         self.assertIn("No such file or directory", result.stderr)
         self.assertEqual(result.stdout, "")
 
+    def test_cli_invalid_level(self):
+        result: subprocess.CompletedProcess = subprocess.run(
+            [
+                sys.executable,
+                str(self.analyzer_path),
+                "--level",
+                "DEBUG",
+                str(self.target_file_path),
+            ],
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("invalid choice", result.stderr)
+        self.assertEqual(result.stdout, "")
+
+
     def test_cli_help(self):
         result: subprocess.CompletedProcess = subprocess.run(
             [sys.executable, str(self.analyzer_path), "--help"],
