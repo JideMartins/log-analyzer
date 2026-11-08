@@ -144,6 +144,7 @@ class TestLogAnalyzer(TestCase):
             [
                 sys.executable,
                 str(self.analyzer_path),
+                str(self.target_file_path),
             ],
             capture_output=True,
             text=True,
@@ -151,7 +152,7 @@ class TestLogAnalyzer(TestCase):
         )
 
         self.assertEqual(result.returncode, 1)
-        self.assertEqual(result.stderr, "")
+        self.assertIn("No such file or directory", result.stderr)
         self.assertEqual(result.stdout, "")
 
     def test_cli_help(self):
